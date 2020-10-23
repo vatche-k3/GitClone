@@ -1,0 +1,72 @@
+First the connection is handled. The server waits for a connection from the client using sockets. 
+When a connection is accepted, a thread is created by the server. Then a command is read by the server. 
+The connection works when the client and server have the same port number.
+
+Configure is tested by checking to see if the IP and Port are stored in a Configure file. 
+The connection made between client and server is made with a port number and IP address.
+
+Create is tested by giving it a project name. If the project already exists, the project will 
+not be created and create will not work. Otherwise it will create a project and initialize a 
+.Manifest with a version number one.
+
+Add is tested by checking to see if an entry for the file in .Manifest exists. 
+If it exists, the file version number is incremented and the stored hash is updated. 
+If it does not exist, the file entry is added.
+
+Remove is tested by checking to see if a file exists in a .Manifest. 
+If it exists, it is removed from the .Manifest. 
+If it does not exist, remove will not be executed.
+
+Commit is tested by checking to see when Add, Modify, or Delete have to be added 
+to a .Commit file. If the server has no files that the client has, .Commit only has A. 
+If the server has files that the client doesn’t have, .Commit has D. 
+If both sides have a file with the same hash but the client has a different live hash, 
+.Commit has M.This is tested by manipulating entries in each manifest file to see if the above comparisons are working properly.
+
+Push is tested by checking to see when Add, Modify, or Delete have to be implemented. 
+If .Commit only has A, the files are created on the server side. If .Commit has D, 
+the files are deleted in the server. If .Commit has M, the contents of the specified 
+file are changed in the server. This is tested by checking if the files in Commit have 
+been changed according to the assigned command and checking the project repository if it has been implemented properly.
+
+Destroy is tested by checking to see if the project given is in the repository and by using 
+multiple directories and sub directories. If the project does not exist, destroy is not run. 
+Otherwise, the server deletes the project repository and everything in it and destroys the assigned mutex lock.
+
+Current Version is tested by sending files and their version numbers to the client. 
+If the project name does not exist, current version is not run. Otherwise, all the 
+files in the server’s manifest are sent to the client with their version numbers, 
+and the client outputs the given information.
+
+History is tested by sending the contents of the .History file to the client. 
+If the .History file is empty of if the project does not exist, history is not run. 
+Otherwise, the file is sent containing all history of pushes since the project is created
+with a manifest version separated by a newline in the file.
+
+Checkout is tested by sending the entire project from server to client, 
+where the client is responsible for putting everything to place, including 
+subdirectories, files, and their contents. This command will fail if project 
+does not exist on the server, if the client can not contact the server, 
+and if the project name already exists on the client side. Otherwise, 
+the client will make the appropriate project with subdirectories and files, 
+including a manifest with the appropriate version and entries.
+
+Rollback is tested by checking to see if the server reverts back to the specified 
+version sent by the client. This command will fail if the project does not exist 
+on the server, if the client and server cannot form a connection, or if the 
+version number is invalid. Otherwise, the server will revert back to the version number given.
+
+Update is tested by comparing the server and client manifests and determining 
+the discrepancy between the files. If the client has no files that the server has, 
+.Update only has A. If the client has files that the server doesn’t have, .Update 
+has D. If both sides have a file with different hashes but the client has the same 
+live hash, .Update has M.This is tested by manipulating entries in each manifest file 
+to see if the above comparisons are working properly.
+
+Upgrade is tested by checking to see when Add, Modify, or Delete have to be 
+implemented. If .Update only has A, the files are created on the client side. 
+If .Update has D, the files are deleted in the client. If .Update has M, 
+the contents of the specified file are changed in the client. This is tested 
+by checking if the files in Update have been changed according to the assigned command 
+and checking the project repository if it has been implemented properly.
+

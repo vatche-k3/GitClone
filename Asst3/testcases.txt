@@ -1,0 +1,81 @@
+Test Cases:
+Configure:
+Input: Ip:127.0.0.1(Local Host) Port: …(ex:18000)
+Output: Creates Configure File & contains ->IP:127.0.0.1 & Port: 18000
+
+Create:
+Input: <command> (Create) & <project name> (ex: Vatche)
+Output: Create a <project>dir(ex:Vatche) with manifest inside dir with Version 1
+
+Add:
+Input: <command> (Add) <project name> (ex: Vatche)  & <filename> (ex: file1)
+Test Case 1 Output: Adds an entry for file into .Manifest, which contains filename with file version and hash of files contents if name does not already exist
+Test Case 2 Output: Increments file version and updates the stored hash if the files contents already exist in the Manifest
+
+Remove:
+Input: <command> (Remove) <project name> (ex: Vatche)  & <filename> (ex: file1)
+Output: Removes an entry of the file from .Manifest
+
+Commit:
+Input: <command>(commit) & <project name>(ex:Vatche)
+Testcase 1 Commit Output: File only contains A if server side does not contain files.
+Testcase 2 Commit Output: File contains D if server side contains files that client does not have.
+Testcase 3 Commit Output: File contains M if  both sides have file in manifest with same hash, but live hash is different
+Testcase 4 Commit Output: File contains A and D if server side does not contain files that client has and contains files that client does not have.
+Testcase 5 Commit Output: File contains A D and M if server side does not contain files that client has, contains files that client does not have, and both sides have file in manifest with same hash, but live hash is different
+
+Push:
+Input: <command>(push) & <project name>(ex:Vatche)
+Testcase 1 Push Output: Commit file only contains A, creates files in project on server side and an entry in manifest.
+Testcase 2 Push Output: Commit file contains D, deletes files in server if server side contains files that client does not have.
+Testcase 3 Push Output: Commit file contains M, changes content in file on server side to match content on client side
+Testcase 4 Push Output: Commit file contains A and D creates files in project on server side and an entry in manifest, while deleting files in server if server side contains files that client does not have.
+Testcase 5 Push Output: Commit file contains A D and M  creates files in project on server side and an entry in manifest, while deleting files in server if server side contains files that client does not have. In addition,  changes content in file on server side to match content on client side
+
+Destroy:
+Input: <command>(destroy) & <project name>(ex:Vatche)
+Testcase 1 Destroy Output: Destroy fails due to server name not being on server side or if client cant create connection with server
+Testcase 2 Destroy Output: locks repository, deletes all other pending commits, and deletes all files and subdirectories under project and sends success message back to client.
+
+Current Version:
+Input: <command>(currentversion) & <project name>(ex:Vatche)
+Server sends all files in the project with their version number to the client, which client then prints out the list.
+
+History:
+Input: <command>(history) & <project name>(ex:Vatche)
+Testcase 1 History Output: Error message if project doesn’t exist on the server or the client can’t form a connection with server
+Testcase 2 History Output: Server sends a log of all operations performed on successful pushes since the project’s creation to client and stores it in file .History
+
+Rollback:
+Input: <command>(currentversion) , <project name>(ex:Vatche) & <version#>
+Testcase 1 Rollback Output: Error message if project doesn’t exist on  the server, the client cannot form a connection, or the version number given is invalid.
+Testcase 2 Rollback Output: Server will revert back to the inputted version of the project requested by client and delete the more recent versions saved on server.
+
+Checkout:
+Input: <command>(checkout) & <project name>(ex:Vatche)
+Testcase 1 Checkout Output: Error message if project doesn’t exist on  the server, the client cannot form a connection, or if the project already exists on the client side.
+Testcase 2 Checkout Output: Server sends the client the current version of project manifest as well as all the files that are listed in it, while client creates project with any subdirectories under the project and puts all files in to place as well as saving the .Manifest.
+
+Update: 
+Input: <command>(Update) & <project name>(ex:Vatche)
+Testcase 1 Update Output: Update file only contains A if client side does not contain files.
+Testcase 2 Update Output: Update file contains D if client side contains files that server does not have.
+Testcase 3 Update Output: Update file contains M if  both sides have file in manifest with different hash, but live hash of client is the same as its stored hash
+Testcase 4 Update Output: Update file contains A and D if client side does not contain files that server has and contains files that server does not have.
+Testcase 5 Commit Output: Update file contains A D and M if client side does not contain files that server has, contains files that server does not have, and both sides have file in manifest with different hash, but live hash of the client is the same as its stored hash.
+Testcase 6 Commit Output: Conflict file is created if server and client files have different hashes and the live hash of the client is different from its stored hash. In addition, the update file is deleted.
+
+Upgrade:
+Input: <command>(Upgrade) & <project name>(ex:Vatche)
+Testcase 1 Upgrade Output: Update file only contains A, creates files in project on client side and an entry in manifest.
+Testcase 2 Upgrade Output: Update file contains D, deletes files in client if client side contains files that server does not have.
+Testcase 3 Upgrade Output: Update file contains M, changes content in file on client side to match content on server side
+Testcase 4 Upgrade Output: Update file contains A and D creates files in project on client side and an entry in manifest, while deleting files in client if client side contains files that server does not have.
+Testcase 5 Upgrade Output: Update file contains A D and M  creates files in project on client side and an entry in manifest, while deleting files in client if client side contains files that server does not have. In addition, changes content in file on client side to match content on server side
+Testcase 6 Upgrade Output: If the Update file is empty client informs user that project is up to date.
+Testcase 7 Upgrade Output: If no Update file exists, client tells user to first do Update
+Testcase 8 Upgrade Output: If Conflict files exists client tells user to fix all conflicts first and update again
+
+
+
+
